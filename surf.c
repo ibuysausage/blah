@@ -166,8 +166,8 @@ static void seturiparameters(Client *c, const char *uri, ParamName *params);
 static void setparameter(Client *c, int refresh, ParamName p, const Arg *a);
 static const char *getcert(const char *uri);
 static void setcert(Client *c, const char *file);
-static const char *getstyle(const char *uri);
 static void setstyle(Client *c, const char *file);
+static void setstyles(Client *c, const char *uri);
 static void runscript(Client *c);
 static void evalscript(Client *c, const char *jsstr, ...);
 static void updatewinid(Client *c);
@@ -912,23 +912,6 @@ setcert(Client *c, const char *uri)
 
 }
 
-const char *
-getstyle(const char *uri)
-{
-	int i;
-
-	if (stylefile)
-		return stylefile;
-
-	for (i = 0; i < LENGTH(styles); ++i) {
-		if (styles[i].regex &&
-		    !regexec(&(styles[i].re), uri, 0, NULL, 0))
-			return styles[i].file;
-	}
-
-	return "";
-}
-
 void
 setstyle(Client *c, const char *file)
 {
@@ -947,6 +930,24 @@ setstyle(Client *c, const char *file)
 	    NULL, NULL));
 
 	g_free(style);
+}
+
+void
+setstyles(Client *c, const char *uri)
+{
+	int i;
+
+	/* -C stylefile replaces the per-site table */
+	if (stylefile) {
+		setstyle(c, stylefile);
+		return;
+	}
+
+	for (i = 0; i < LENGTH(styles); ++i) {
+		if (styles[i].regex &&
+		    !regexec(&(styles[i].re), uri, 0, NULL, 0))
+			setstyle(c, styles[i].file);
+	}
 }
 
 void
