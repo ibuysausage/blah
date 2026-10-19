@@ -2,19 +2,24 @@ Only in ./: .clangd
 Only in ./: .clang-format
 diff --color -up ../surf-2.1/config.def.h ./config.def.h
 --- ../surf-2.1/config.def.h	2021-05-09 18:34:33.000000000 -0400
-+++ ./config.def.h	2026-10-18 19:58:28.062408114 -0400
-@@ -105,9 +105,14 @@ static WebKitFindOptions findopts = WEBK
-  * The iteration will stop at the first match, beginning at the beginning of
-  * the list.
++++ ./config.def.h	2026-10-18 20:07:29.293372258 -0400
+@@ -100,14 +100,15 @@ static WebKitFindOptions findopts = WEBK
+         } \
+ }
+ 
+-/* styles */
+-/*
+- * The iteration will stop at the first match, beginning at the beginning of
+- * the list.
++/* styles
++ * All entries whose regex matches the uri are loaded, in list order.
++ * Later entries override earlier ones, so keep the catch-all default.css
++ * first and put site-specific files after it.
   */
-+
-+/* Files are loaded in order.
-+ * Site files after will override files above.
-+ */
  static SiteSpecific styles[] = {
  	/* regexp               file in $styledir */
  	{ ".*",                 "default.css" },
-+	// { "alacritty\\.org",       "alacritty.css" },
++	/* { "alacritty\\.org",    "alacritty.css" }, */
  };
  
  /* certificates */
@@ -22,7 +27,7 @@ Only in ./: fah.diff
 Only in ./: .git
 diff --color -up ../surf-2.1/surf.c ./surf.c
 --- ../surf-2.1/surf.c	2021-05-09 18:34:33.000000000 -0400
-+++ ./surf.c	2026-10-18 20:02:36.369957255 -0400
++++ ./surf.c	2026-10-18 20:07:29.294372264 -0400
 @@ -166,8 +166,8 @@ static void seturiparameters(Client *c,
  static void setparameter(Client *c, int refresh, ParamName p, const Arg *a);
  static const char *getcert(const char *uri);
